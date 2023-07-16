@@ -11,28 +11,23 @@ class CardCreatorView extends StatefulWidget {
 }
 
 class _CardCreatorViewState extends State<CardCreatorView> {
-  final Map<String, dynamic> _data = <String, dynamic>{
-    "words": [""],
-    "textLength": 0,
-    "difficulty": Difficulty.medium,
-    "generatedText": "",
-  };
+  Data _data = Data();
 
   void updateTextLength(double textLength) {
     setState(() {
-      _data["textLength"] = textLength.round();
+      _data = _data.copyWith(textLength: textLength.round());
     });
   }
 
   void updateDifficulty(Difficulty? difficulty) {
     setState(() {
-      _data["difficulty"] = difficulty;
+      _data = _data.copyWith(difficulty: difficulty!);
     });
   }
 
   void updateWords(String words) {
     setState(() {
-      _data["words"] = words.split(",");
+      _data = _data.copyWith(words: words.split(","));
     });
   }
 
@@ -60,13 +55,13 @@ class _CardCreatorViewState extends State<CardCreatorView> {
         Container(
           margin: const EdgeInsets.all(10.0),
           child: TextLengthSlider(
-            currentSliderValue: _data["textLength"].toDouble(),
+            currentSliderValue: _data.textLength.toDouble(),
             onChange: updateTextLength,
           ),
         ),
         Container(
           child: DifficultyRadio(
-            character: _data["difficulty"],
+            character: _data.difficulty,
             onChange: updateDifficulty,
           ),
         ),
@@ -74,14 +69,13 @@ class _CardCreatorViewState extends State<CardCreatorView> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             ElevatedButton(
-              onPressed: () =>
-                  {DataCubit.cubit(context).generateText(Data.fromJson(_data))},
+              onPressed: () => {DataCubit.cubit(context).generateText(_data)},
               child: const Text('Generate Text'),
             ),
           ],
         ),
         const SizedBox(height: 20),
-        GeneratedText(data: _data),
+        GeneratedText(text: _data.toString()),
       ],
     );
   }
@@ -90,10 +84,10 @@ class _CardCreatorViewState extends State<CardCreatorView> {
 class GeneratedText extends StatelessWidget {
   const GeneratedText({
     super.key,
-    required Map<String, dynamic> data,
-  }) : _data = data;
+    required String text,
+  }) : _text = text;
 
-  final Map<String, dynamic> _data;
+  final String _text;
 
   @override
   Widget build(BuildContext context) {
@@ -108,16 +102,14 @@ class GeneratedText extends StatelessWidget {
         // success
         else if (state is DataFetchSuccess) {
           return Center(
-            child: Text(state.data!.generatedText
-                    ),
-            );
+            child: Text(state.data!.generatedText),
+          );
         }
 
         // failure
         else if (state is DataFetchFailed) {
           return Center(
-            child: Text(
-                'Current data is ${_data["textLength"]}, ${_data["difficulty"]}, ${_data["words"]} '),
+            child: Text(_text),
           );
         }
 
@@ -153,7 +145,6 @@ class TextLengthSlider extends StatelessWidget {
     );
   }
 }
-
 
 class DifficultyRadio extends StatelessWidget {
   final Difficulty character;
