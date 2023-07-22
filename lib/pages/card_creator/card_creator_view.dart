@@ -101,9 +101,24 @@ class GeneratedText extends StatelessWidget {
         }
         // success
         else if (state is DataFetchSuccess) {
-          return Center(
-            child: Text(state.data!.generatedText),
-          );
+          return Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(state.data!.generatedText),
+                const SizedBox(height: 20),
+                ElevatedButton(
+                  onPressed: () => {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text('Card added to repository'),
+                        duration: Duration(seconds: 1),
+                      ),
+                    ),
+                  },
+                  child: const Icon(Icons.add),
+                ),
+              ]);
         }
 
         // failure
