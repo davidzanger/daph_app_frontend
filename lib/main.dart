@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:langapp/cubits/data/cubit.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:langapp/pages/card_creator/card_creator_view.dart';
+import 'package:langapp/pages/repository/repository_view.dart';
 
 void main() {
   runApp(const MyApp());
@@ -88,7 +89,7 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
         body: const TabBarView(
           children: <Widget>[
-            Placeholder(),
+            RepositoryView(),
             Padding(
               padding: EdgeInsets.all(20.0),
               child: Center(
