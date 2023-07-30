@@ -44,7 +44,26 @@ class MyCardsListView extends StatelessWidget {
             trailing: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                IconButton(onPressed: () {}, icon: Icon(Icons.delete)),
+                IconButton(
+                    onPressed: () {
+                      BlocProvider.of<MyCardsBloc>(context)
+                          .add(DeleteCard(card: dataList[index]));
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text('Card deleted from repository'),
+                          action: SnackBarAction(
+                            label: 'Undo',
+                            onPressed: () {
+                              BlocProvider.of<MyCardsBloc>(context).add(
+                                  InsertCard(
+                                      card: dataList[index], index: index));
+                            },
+                          ),
+                          duration: Duration(seconds: 2),
+                        ),
+                      );
+                    },
+                    icon: Icon(Icons.delete)),
                 IconButton(onPressed: () {}, icon: Icon(Icons.more_vert)),
               ],
             ),
