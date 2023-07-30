@@ -30,3 +30,12 @@ class DeleteCard extends MyCardsEvent {
   @override
   List<Object> get props => [card];
 }
+
+class InsertCard extends MyCardsEvent {
+  final Data card;
+  final int index;
+  const InsertCard({required this.card, required this.index});
+
+  @override
+  List<Object> get props => [card, index];
+}

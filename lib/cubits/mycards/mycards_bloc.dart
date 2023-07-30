@@ -12,6 +12,7 @@ class MyCardsBloc extends Bloc<MyCardsEvent, MyCardsState> {
     on<LoadMyCards>(_onLoadMyCards);
     on<AddCard>(_onAddCard);
     on<DeleteCard>(_onDeleteCard);
+    on<InsertCard>(_onInsertCard);
   }
   void _onLoadMyCards(
     LoadMyCards event,
@@ -40,6 +41,17 @@ class MyCardsBloc extends Bloc<MyCardsEvent, MyCardsState> {
     if (state is MyCardsLoaded) {
       final List<Data> mycards = List<Data>.from(state.mycards);
       mycards.remove(event.card);
+      emit(MyCardsLoaded(mycards: mycards));
+    }
+  }
+  void _onInsertCard(
+    InsertCard event,
+    Emitter<MyCardsState> emit,
+  ) {
+    final state = this.state;
+    if (state is MyCardsLoaded) {
+      final List<Data> mycards = List<Data>.from(state.mycards);
+      mycards.insert(event.index, event.card);
       emit(MyCardsLoaded(mycards: mycards));
     }
   }
