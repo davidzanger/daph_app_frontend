@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:langapp/cubits/data/cubit.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:langapp/cubits/mycards/mycards_bloc.dart';
 import 'package:langapp/models/data.dart';
 
 class CardCreatorView extends StatefulWidget {
@@ -42,7 +43,7 @@ class _CardCreatorViewState extends State<CardCreatorView> {
     return ListView(
       children: <Widget>[
         Padding(
-          padding: EdgeInsets.symmetric(horizontal: 8, vertical: 16),
+          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
           child: TextField(
             onChanged: updateWords,
             decoration: const InputDecoration(
@@ -75,7 +76,7 @@ class _CardCreatorViewState extends State<CardCreatorView> {
           ],
         ),
         const SizedBox(height: 20),
-        GeneratedText(text: _data.toString()),
+        GeneratedText(card: _data),
       ],
     );
   }
@@ -84,10 +85,10 @@ class _CardCreatorViewState extends State<CardCreatorView> {
 class GeneratedText extends StatelessWidget {
   const GeneratedText({
     super.key,
-    required String text,
-  }) : _text = text;
+    required Data card,
+  }) : _card = card;
 
-  final String _text;
+  final Data _card;
 
   @override
   Widget build(BuildContext context) {
@@ -107,16 +108,22 @@ class GeneratedText extends StatelessWidget {
               children: [
                 Text(state.data!.generatedText),
                 const SizedBox(height: 20),
-                ElevatedButton(
-                  onPressed: () => {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        content: Text('Card added to repository'),
-                        duration: Duration(seconds: 1),
+                BlocListener<MyCardsBloc, MyCardsState>(
+                  listener: (context, myBlocState) {},
+                  child: ElevatedButton(
+                    onPressed: () => {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text('Card added to repository'),
+                          duration: Duration(seconds: 1),
+                        ),
                       ),
-                    ),
-                  },
-                  child: const Icon(Icons.add),
+                      context.read<MyCardsBloc>().add(AddCard(
+                          card: _card.copyWith(
+                              generatedText: state.data!.generatedText))),
+                    },
+                    child: const Icon(Icons.add),
+                  ),
                 ),
               ]);
         }
@@ -124,7 +131,7 @@ class GeneratedText extends StatelessWidget {
         // failure
         else if (state is DataFetchFailed) {
           return Center(
-            child: Text(_text),
+            child: Text(_card.toString()),
           );
         }
 

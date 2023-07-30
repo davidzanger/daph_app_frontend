@@ -4,6 +4,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:langapp/pages/card_creator/card_creator_view.dart';
 import 'package:langapp/pages/repository/repository_view.dart';
 
+import 'cubits/mycards/mycards_bloc.dart';
+
 void main() {
   runApp(const MyApp());
 }
@@ -17,6 +19,7 @@ class MyApp extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider(create: (_) => DataCubit()),
+        BlocProvider(create: (_) => MyCardsBloc()..add(const LoadMyCards())),
       ],
       child: MaterialApp(
         title: 'Flutter LangApp',
